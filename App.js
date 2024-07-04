@@ -1,11 +1,19 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TextInput, View} from 'react-native';
+import Header from './Components/Header';
+
 
 export default function App() {
+  const appName = "lena_first_app";
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <Text>Hello World</Text>
+      {/* use a prop to pass appName to Header */}
+      <Header app_name = {appName} theme="dark"> 
+      {/* <Text>Children1</Text>
+      <Text>Children2</Text> */}
+      </Header>
+      <Input/>
+      {/* <Text>{appName}.</Text> */}
       <StatusBar style="auto" />
     </View>
   );
