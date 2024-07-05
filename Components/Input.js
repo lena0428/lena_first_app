@@ -1,5 +1,7 @@
-import { TextInput } from 'react-native'
+import { TextInput, Text, StatusBar } from 'react-native'
 import React from 'react'
+import { useState } from 'react';
+
 
 const Input = () => {
   const [text, setText] = useState('');
@@ -20,4 +22,4 @@ const Input = () => {
   )
 }
 
-export default Header
+export default Input
