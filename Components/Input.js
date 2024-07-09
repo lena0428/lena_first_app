@@ -2,12 +2,14 @@ import { TextInput, Text, Button } from 'react-native'
 import React from 'react'
 import { useState } from 'react';
 
-
-const Input = () => {
+// update Input to receive a prop
+const Input = ({inputHandler}) => {
     const [isBlurred, setIsBlurred] = useState(false);
     const [text, setText] = useState('');
     function handleConfirm() {
         console.log('user type:', text);
+        // call the received prop callback fn
+        inputHandler(text);
     }
     return (
         <>

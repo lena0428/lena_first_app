@@ -1,11 +1,17 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View} from 'react-native';
+import { StyleSheet, View, Text} from 'react-native';
 import Header from './Components/Header';
 import Input from './Components/Input';
+import { useState } from 'react';
 
 
 export default function App() {
   const appName = "lena_first_app";
+  const [receivedText, setReceivedText] = useState('');
+  function handleInputData(data) {
+    console.log('callback fn called with:', data);
+    setReceivedText(data);
+  }
   return (
     <View style={styles.container}>
       {/* use a prop to pass appName to Header */}
@@ -13,8 +19,8 @@ export default function App() {
       {/* <Text>Children1</Text>
       <Text>Children2</Text> */}
       </Header>
-      <Input/>
-      {/* <Text>{appName}.</Text> */}
+      <Input inputHandler = {handleInputData}/>
+      <Text>Received: {receivedText}</Text>
       <StatusBar style="auto" />
     </View>
   );
