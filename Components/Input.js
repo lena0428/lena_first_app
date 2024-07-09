@@ -28,7 +28,7 @@ const Input = (props) => {
                     value={text}>
                 </TextInput>
                 {isBlurred && <Text>Thank you</Text>}
-                <Button title='Confirm' onPress={handleConfirm}>Confirm</Button>
+                <View style={styles.buttonStyle}><Button title='Confirm' onPress={handleConfirm}>Confirm</Button></View>
             </View >
         </Modal>
     )
@@ -41,6 +41,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    buttonStyle: {
+        width: '30%',
+        margin: 5,
+        backgroundColor: 'lightblue'
+    }
 });
 
 export default Input
