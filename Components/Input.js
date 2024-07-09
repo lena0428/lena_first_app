@@ -1,4 +1,4 @@
-import { TextInput, Text, StatusBar } from 'react-native'
+import { TextInput, Text, Button } from 'react-native'
 import React from 'react'
 import { useState } from 'react';
 
@@ -6,6 +6,9 @@ import { useState } from 'react';
 const Input = () => {
     const [isBlurred, setIsBlurred] = useState(false);
     const [text, setText] = useState('');
+    function handleConfirm() {
+        console.log('user type:', text);
+    }
     return (
         <>
             <TextInput
@@ -22,7 +25,7 @@ const Input = () => {
                 value={text}>
             </TextInput>
             {isBlurred && <Text>Thank you</Text>}
-            <StatusBar style="auto" />
+            <Button title='Confirm' onPress={handleConfirm}>Confirm</Button>
         </>
     )
 }
