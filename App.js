@@ -8,8 +8,10 @@ import { useState } from 'react';
 export default function App() {
   const appName = "lena_first_app";
   const [receivedText, setReceivedText] = useState('');
+  // set callback function to handle the received data
   function handleInputData(data) {
     console.log('callback fn called with:', data);
+    // set the receive data to the state
     setReceivedText(data);
   }
   return (
