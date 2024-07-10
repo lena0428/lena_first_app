@@ -20,7 +20,16 @@ const Input = (props) => {
         <Modal animationType='slide' visible={props.isModalVisible} transparent={true}>
             <View style={styles.modalBackground}>
                 <View style={styles.modalContainer}>
-                   
+                    <Image
+                        style={styles.image}
+                        source={{ uri: 'https://cdn-icons-png.flaticon.com/512/2617/2617812.png' }}
+                        alt="image from URL"
+                    />
+                    <Image
+                        style={styles.image}
+                        source={require('../assets/2617812.png')}
+                        alt="local image"
+                    />
                     <TextInput
                         style={styles.input}
                         placeholder="Type something"
