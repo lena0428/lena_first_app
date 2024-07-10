@@ -46,7 +46,7 @@ const Input = (props) => {
                     {isBlurred && <Text>Thank you</Text>}
                     <View style={styles.buttonContainer}>
                         <Button title='Cancel' onPress={handleCancel} color="#007AFF" />
-                        <Button title='Confirm' onPress={handleConfirm} color="#007AFF"/>
+                        <Button title='Confirm' onPress={handleConfirm} color="#007AFF" disabled={!text} />
                     </View>
                 </View>
             </View>
