@@ -1,51 +1,90 @@
-import { StyleSheet, TextInput, Text, Button, View, Modal } from 'react-native'
-import React from 'react'
-import { useState } from 'react';
+import { StyleSheet, TextInput, Text, Button, View, Modal, Image } from 'react-native';
+import React, { useState } from 'react';
 
-// update Input to receive a prop
 const Input = (props) => {
     const [isBlurred, setIsBlurred] = useState(false);
     const [text, setText] = useState('');
-    function handleConfirm() {
-        console.log('user type:', text);
-        // call the received prop callback fn
+
+    const handleConfirm = () => {
+        setText('');
+        props.onConfirm();
         props.inputHandler(text);
-    }
+    };
+
+    const handleCancel = () => {
+        setText('');
+        props.onCancel();
+    };
+
     return (
-        <Modal animationType='slide' visible={props.isModalVisible}>
-            <View style={styles.container}>
-                <TextInput
-                    style={{ height: 40 }}
-                    placeholder="Type here to translate!"
-                    onChangeText={(newText) => {
-                        setText(newText);
-                        if (isBlurred) {
-                            setIsBlurred(false);
-                        }
-                    }}
-                    onBlur={() => setIsBlurred(true)}
-                    onFocus={() => setIsBlurred(false)}
-                    value={text}>
-                </TextInput>
-                {isBlurred && <Text>Thank you</Text>}
-                <View style={styles.buttonStyle}><Button title='Confirm' onPress={handleConfirm}>Confirm</Button></View>
-            </View >
+        <Modal animationType='slide' visible={props.isModalVisible} transparent={true}>
+            <View style={styles.modalBackground}>
+                <View style={styles.modalContainer}>
+                    <Image
+                        style={styles.image}
+                        source={{ uri: 'https://cdn-icons-png.flaticon.com/512/2617/2617812.png' }}
+                        alt="image from URL"
+                    />
+                    <Image
+                        style={styles.image}
+                        source={require('../assets/2617812.png')}
+                        alt="local image"
+                    />
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Type something"
+                        onChangeText={(newText) => {
+                            setText(newText);
+                            if (isBlurred) {
+                                setIsBlurred(false);
+                            }
+                        }}
+                        onBlur={() => setIsBlurred(true)}
+                        onFocus={() => setIsBlurred(false)}
+                        value={text}
+                    />
+                    {isBlurred && <Text>Thank you</Text>}
+                    <View style={styles.buttonContainer}>
+                        <Button title='Cancel' onPress={handleCancel} color="#007AFF" />
+                        <Button title='Confirm' onPress={handleConfirm} color="#007AFF" disabled={!text} />
+                    </View>
+                </View>
+            </View>
         </Modal>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
-    container: {
+    modalBackground: {
         flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
         justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
-    buttonStyle: {
-        width: '30%',
-        margin: 5,
-        backgroundColor: 'lightblue'
-    }
+    modalContainer: {
+        width: 300,
+        padding: 20,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        alignItems: 'center',
+    },
+    input: {
+        height: 40,
+        borderColor: '#A020F0',
+        borderWidth: 1,
+        width: '100%',
+        marginBottom: 20,
+        paddingLeft: 10,
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
+    },
+    image: {
+        width: 100,
+        height: 100,
+    },
 });
 
-export default Input
+export default Input;
