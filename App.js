@@ -1,8 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, Text, Button, SafeAreaView, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, Button, SafeAreaView, ScrollView, FlatList } from 'react-native';
 import Header from './Components/Header';
 import Input from './Components/Input';
 import { useState } from 'react';
+import GoalItem from './Components/GoalItem';
 
 export default function App() {
   const appName = "lena_first_app";
@@ -51,16 +52,23 @@ export default function App() {
         {goals.length === 0 ? (
           <Text style={styles.textStyle}>Please Add a Goal</Text>
         ) : (
-          <ScrollView horizontal={true}>
-            {goals.map((goal) => {
-              console.log(goal);
-              return (
-                <View key={goal.id} style={styles.textContainer}>
-                  <Text style={styles.textStyle}>{goal.text}</Text>
-                </View>
-              );
-            })}
-          </ScrollView>
+          // because we don't do the manual mapping, we don't need the unique key for each item, react native does it for us
+          <FlatList renderItem={({ item }) => {
+            return (
+              <GoalItem goal={item}></GoalItem>
+            )
+          }} data={goals}>
+          </FlatList>
+          // <ScrollView>
+          //   {goals.map((goal) => {
+          //     console.log(goal);
+          //     return (
+          //       <View key={goal.id} style={styles.textContainer}>
+          //         <Text style={styles.textStyle}>{goal.text}</Text>
+          //       </View>
+          //     );
+          //   })}
+          // </ScrollView>
         )}
         <View style={styles.textContainer}>
           <Text style={styles.textStyle}>Received: {receivedText}</Text>
