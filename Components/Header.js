@@ -12,10 +12,10 @@ const Header = (props) => {
 
 const styles = StyleSheet.create({
   headerStyle: {
+    fontSize: 30,
     borderColor: 'purple',
     borderWidth: 2,
     margin: 15,
-    fontSize: 30,
     padding: 10,
   }
 })

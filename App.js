@@ -63,14 +63,13 @@ const styles = StyleSheet.create({
   },
   topContainer: {
     flex: 1,
-    backgroundColor: 'red',
+    backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
   },
   bottomContainer: {
     flex: 4,
-    backgroundColor: 'lightblue',
+    backgroundColor: '#B19CD9',
     alignItems: 'center',
-    justifyContent: 'center',
   }
 });
