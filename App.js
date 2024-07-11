@@ -74,9 +74,6 @@ export default function App() {
           //   })}
           // </ScrollView>
         )}
-        <View style={styles.textContainer}>
-          <Text style={styles.textStyle}>Received: {receivedText}</Text>
-        </View>
       </View>
       <StatusBar style="auto" />
     </SafeAreaView>
