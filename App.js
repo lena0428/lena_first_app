@@ -27,6 +27,11 @@ export default function App() {
     setModalVisible(false);
   }
 
+  // Callback function to handle the deletion of a goal
+  const handleDeleteGoal = (goalId) => {
+    setGoals((currentGoals) => currentGoals.filter((goal) => goal.id !== goalId));
+  };
+
   const handleConfirm = () => {
     setModalVisible(false);
   };
@@ -55,8 +60,7 @@ export default function App() {
           // because we don't do the manual mapping, we don't need the unique key for each item, react native does it for us
           <FlatList renderItem={({ item }) => {
             return (
-              <GoalItem goal={item}></GoalItem>
-            )
+              <GoalItem goal={item} onDelete={handleDeleteGoal} />)
           }} data={goals}>
           </FlatList>
           // <ScrollView>
