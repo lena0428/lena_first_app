@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, Text, Button, SafeAreaView } from 'react-native';
+import { StyleSheet, View, Text, Button, SafeAreaView, ScrollView } from 'react-native';
 import Header from './Components/Header';
 import Input from './Components/Input';
 import { useState } from 'react';
@@ -48,14 +48,20 @@ export default function App() {
       />
       <View style={styles.bottomContainer}>
         {/* array map */}
-        {goals.length === 0 ? (<Text style={styles.textStyle}>Please Add a Goal</Text>) : (goals.map((goal) => {
-          console.log(goal)
-          return (
-            <View key={goal.id} style={styles.textContainer}>
-              <Text style={styles.textStyle}>{goal.text}</Text>
-            </View>
-          );
-        }))}
+        {goals.length === 0 ? (
+          <Text style={styles.textStyle}>Please Add a Goal</Text>
+        ) : (
+          <ScrollView horizontal={true}>
+            {goals.map((goal) => {
+              console.log(goal);
+              return (
+                <View key={goal.id} style={styles.textContainer}>
+                  <Text style={styles.textStyle}>{goal.text}</Text>
+                </View>
+              );
+            })}
+          </ScrollView>
+        )}
         <View style={styles.textContainer}>
           <Text style={styles.textStyle}>Received: {receivedText}</Text>
         </View>
