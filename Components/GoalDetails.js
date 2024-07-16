@@ -1,11 +1,12 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Button } from 'react-native';
 
 export default function GoalDetails({ navigation, route }) {
     console.log(route)
     return (
         <View>
-            <Text>GoalDetails of {route.params.goalObject.text} with id of {route.params.goalObject.id}</Text>
+            {route.params?(<Text>GoalDetails of {route.params.goalObject.text} with id of {route.params.goalObject.id}</Text>):(<Text>More Details</Text>)}
+            <Button title='More details' onPress={() => navigation.push('Details')} />
         </View>
     );
 }
