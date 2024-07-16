@@ -6,7 +6,11 @@ const GoalItem = ({ goal, onDelete, handlePressGoalDetails }) => {
     <View style={styles.textContainer}>
       <Text style={styles.textStyle}>{goal.text}</Text>
       <Button title="X" color="black" onPress={() => onDelete(goal.id)} />
-      <Button title='i' color='black' onPress={() => handlePressGoalDetails()} />
+      <Button title='i' color='black' onPress={() => {
+        // pass the goal object back
+
+        handlePressGoalDetails(goal)
+      }} />
     </View>
   );
 };

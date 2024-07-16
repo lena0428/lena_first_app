@@ -32,9 +32,9 @@ export default function Home({ navigation }) {
     setGoals((currentGoals) => currentGoals.filter((goal) => goal.id !== goalId));
   };
 
-  function handlePressGoalDetails() {
-    console.log('handlePressGoalDetails');
-    navigation.navigate('Details');
+  function handlePressGoalDetails(pressedGoal) {
+    console.log(pressedGoal);
+    navigation.navigate('Details', { goalObject: pressedGoal });
   }
 
   const handleConfirm = () => {
@@ -65,7 +65,7 @@ export default function Home({ navigation }) {
           // because we don't do the manual mapping, we don't need the unique key for each item, react native does it for us
           <FlatList renderItem={({ item }) => {
             return (
-              <GoalItem goal={item} onDelete={handleDeleteGoal} handlePressGoalDetails = {handlePressGoalDetails}/>)
+              <GoalItem goal={item} onDelete={handleDeleteGoal} handlePressGoalDetails={handlePressGoalDetails} />)
           }} data={goals}>
           </FlatList>
           // <ScrollView>
