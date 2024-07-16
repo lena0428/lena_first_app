@@ -5,7 +5,7 @@ import Input from './Input';
 import { useState } from 'react';
 import GoalItem from './GoalItem';
 
-export default function Home() {
+export default function Home({ navigation }) {
   const appName = "lena_first_app";
   const [receivedText, setReceivedText] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
@@ -31,6 +31,11 @@ export default function Home() {
   const handleDeleteGoal = (goalId) => {
     setGoals((currentGoals) => currentGoals.filter((goal) => goal.id !== goalId));
   };
+
+  function handlePressGoalDetails() {
+    console.log('handlePressGoalDetails');
+    navigation.navigate('Details');
+  }
 
   const handleConfirm = () => {
     setModalVisible(false);
@@ -60,7 +65,7 @@ export default function Home() {
           // because we don't do the manual mapping, we don't need the unique key for each item, react native does it for us
           <FlatList renderItem={({ item }) => {
             return (
-              <GoalItem goal={item} onDelete={handleDeleteGoal} />)
+              <GoalItem goal={item} onDelete={handleDeleteGoal} handlePressGoalDetails = {handlePressGoalDetails}/>)
           }} data={goals}>
           </FlatList>
           // <ScrollView>
