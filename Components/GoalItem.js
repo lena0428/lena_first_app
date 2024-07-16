@@ -1,11 +1,16 @@
 import React from 'react';
 import { View, Text, StyleSheet, Button } from 'react-native';
 
-const GoalItem = ({ goal, onDelete }) => {
+const GoalItem = ({ goal, onDelete, handlePressGoalDetails }) => {
   return (
     <View style={styles.textContainer}>
       <Text style={styles.textStyle}>{goal.text}</Text>
       <Button title="X" color="black" onPress={() => onDelete(goal.id)} />
+      <Button title='i' color='black' onPress={() => {
+        // pass the goal object back
+
+        handlePressGoalDetails(goal)
+      }} />
     </View>
   );
 };
