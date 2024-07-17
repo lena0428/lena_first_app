@@ -23,7 +23,7 @@ export default function App() {
           }}
         />
         <Stack.Screen name="Details" component={GoalDetails} options={({ navigation, route }) => {
-          return { headerStyle: headerStyle, title: route.params?.goalObject.text, headerRight: () => { return <Button title='Warning' /> } }
+          return { headerStyle: headerStyle, title: route.params?.goalObject.text }
         }} />
       </Stack.Navigator>
     </NavigationContainer>
