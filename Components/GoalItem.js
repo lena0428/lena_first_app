@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Button, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import PressableButton from './PressableButton';
+import { FontAwesome } from '@expo/vector-icons';
 
 const GoalItem = ({ goal, onDelete }) => {
   const navigation = useNavigation();
@@ -18,7 +19,7 @@ const GoalItem = ({ goal, onDelete }) => {
         <Text style={styles.textStyle}>{goal.text}</Text>
         {/* <Button title="X" onPress={() => deleteHandler(goal.id)} /> */}
         <PressableButton
-          pressFuction={() => deleteHandler(goal.id)}
+          pressFuction={() => onDelete(goal.id)}
           componentStyle={styles.buttonStyle}
         >
           <FontAwesome name="trash" size={24} color="black" />

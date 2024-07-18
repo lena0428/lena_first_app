@@ -4,6 +4,8 @@ import Header from './Header';
 import Input from './Input';
 import { useState } from 'react';
 import GoalItem from './GoalItem';
+import PressableButton from './PressableButton';
+
 
 export default function Home() {
   const appName = "lena_first_app";
@@ -41,7 +43,7 @@ export default function Home() {
       <View style={styles.topContainer}>
         <Header app_name={appName} theme="dark" />
         <PressableButton
-          pressFuction={() => setIsModuleVisiable(true)}
+          pressFuction={() => setModalVisible(true)}
           componentStyle={styles.buttonStyle}
         >
           <Text style={styles.subtilte}>
