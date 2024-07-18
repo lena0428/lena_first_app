@@ -1,15 +1,15 @@
 import React from 'react';
 import { View, Text, StyleSheet, Button } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
-const GoalItem = ({ goal, onDelete, handlePressGoalDetails }) => {
+const GoalItem = ({ goal, onDelete }) => {
+  const navigation = useNavigation();
   return (
     <View style={styles.textContainer}>
       <Text style={styles.textStyle}>{goal.text}</Text>
       <Button title="X" color="black" onPress={() => onDelete(goal.id)} />
-      <Button title='i' color='black' onPress={() => {
-        // pass the goal object back
-
-        handlePressGoalDetails(goal)
+      <Button title="i" color="black" onPress={() => {
+        navigation.navigate('Details', { goalObject: goal });
       }} />
     </View>
   );
