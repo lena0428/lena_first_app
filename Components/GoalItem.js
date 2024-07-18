@@ -20,7 +20,9 @@ const GoalItem = ({ goal, onDelete }) => {
         <PressableButton
           pressFuction={() => deleteHandler(goal.id)}
           componentStyle={styles.buttonStyle}
-        >X</PressableButton>
+        >
+          <FontAwesome name="trash" size={24} color="black" />
+        </PressableButton>
       </Pressable>
     </View>
   );
@@ -51,6 +53,7 @@ const styles = StyleSheet.create({
   pressedStyle: {
     opacity: 0.5,
     backgroundColor: 'red',
+    padding: 5,
   },
   buttonStyle: {
     marginLeft: 10,
