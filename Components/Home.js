@@ -40,7 +40,14 @@ export default function Home() {
     <SafeAreaView style={styles.container}>
       <View style={styles.topContainer}>
         <Header app_name={appName} theme="dark" />
-        <Button title='Add a goal' onPress={() => setModalVisible(true)} />
+        <PressableButton
+          pressFuction={() => setIsModuleVisiable(true)}
+          componentStyle={styles.buttonStyle}
+        >
+          <Text style={styles.subtilte}>
+            Add a goal
+          </Text>
+        </PressableButton>
       </View>
       <Input
         inputHandler={handleInputData}
@@ -54,7 +61,7 @@ export default function Home() {
         ) : (
           <FlatList renderItem={({ item }) => {
             return (
-              <GoalItem goal={item} onDelete={handleDeleteGoal}/>
+              <GoalItem goal={item} onDelete={handleDeleteGoal} />
             )
           }} data={goals}>
           </FlatList>
@@ -81,15 +88,26 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   topContainer: {
-    flex: 1,
+    flex: 1.5,
     backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
   },
   bottomContainer: {
-    flex: 4,
+    flex: 5,
     backgroundColor: '#B19CD9',
     alignItems: 'center',
     rowGap: 10,
-  }
+  },
+  buttonStyle: {
+    boarderRadius: 10,
+    padding: 10,
+    margin: 10,
+  },
+  subtilte: {
+    color: 'purple',
+    fontSize: 20,
+    margin: 10,
+    borderRadius: 20,
+  },
 });
