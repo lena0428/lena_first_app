@@ -7,6 +7,7 @@ const GoalItem = ({ goal, onDelete }) => {
   return (
     <View style={styles.textContainer}>
       <Pressable
+        android_ripple={{ color: 'pink' }}
         onPress={() => navigation.navigate('Details', { goalObject: goal })}
         style={styles.pressable}
       >
@@ -21,6 +22,7 @@ const styles = StyleSheet.create({
   textContainer: {
     backgroundColor: 'grey',
     borderRadius: 10,
+    borderWidth: 2,
     padding: 5,
     marginVertical: 5,
     flexDirection: 'row',
@@ -35,8 +37,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 10, 
-}
+    padding: 10,
+  }
 });
 
 export default GoalItem;
