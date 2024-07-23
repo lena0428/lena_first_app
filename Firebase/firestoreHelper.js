@@ -1,6 +1,6 @@
 import { collection, addDoc } from "firebase/firestore";
 import { database } from "./firebaseSetup";
-import { deleteDoc, doc } from "firebase/firestore";
+import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 
 export async function writeToDB(data, collectionName) {
     try {
@@ -11,10 +11,20 @@ export async function writeToDB(data, collectionName) {
 }
 
 export async function deleteFromDB(key, collectionName) {
-    try { 
-      await deleteDoc(doc(database, collectionName, key));
+    try {
+        await deleteDoc(doc(database, collectionName, key));
     }
     catch (err) {
-      console.log(err)
+        console.log(err)
     }
-  }
+}
+
+// make a new function in firestoreHelper file to update the document
+export async function markAsWarning(goalId) {
+    console.log(goalId)
+    try {
+        await updateDoc(doc(database, 'goals', goalId), { warning: true });
+    } catch (e) {
+        console.error('Error updating document:', e);
+    }
+}

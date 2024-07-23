@@ -1,5 +1,6 @@
 import React, { useLayoutEffect, useState } from 'react';
 import { View, Text, Button } from 'react-native';
+import { markAsWarning } from '../Firebase/firestoreHelper';
 
 export default function GoalDetails({ navigation, route }) {
     const [textColor, setTextColor] = useState('black');
@@ -14,6 +15,8 @@ export default function GoalDetails({ navigation, route }) {
                     onPress={() => {
                         setTextColor('red');
                         setHeaderTitle('Warning!');
+                        // Call the function to update Firestore
+                        markAsWarning(route.params.goalObject.id); 
                     }}
                 />
             ),
