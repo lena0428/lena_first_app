@@ -5,9 +5,10 @@ import Input from './Input';
 import { useState } from 'react';
 import GoalItem from './GoalItem';
 import PressableButton from './PressableButton';
-
+import { database } from '../Firebase/firebaseSetup';
 
 export default function Home() {
+  console.log(database)
   const appName = "lena_first_app";
   const [receivedText, setReceivedText] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
