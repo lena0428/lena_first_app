@@ -29,6 +29,8 @@ export default function Home() {
       }
       setGoals(newArray);
     });
+    // detach the listener when we no longer need to listen to the changes in data.
+    return () => unsubscribe(); 
   }, []);
 
 
