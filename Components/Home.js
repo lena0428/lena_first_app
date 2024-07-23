@@ -6,6 +6,9 @@ import { useState } from 'react';
 import GoalItem from './GoalItem';
 import PressableButton from './PressableButton';
 import { database } from '../Firebase/firebaseSetup';
+import { writeToDB } from '../Firebase/firestoreHelper';
+import { collection, onSnapshot } from 'firebase/firestore';
+import { useEffect } from 'react';
 
 export default function Home() {
   console.log(database)
@@ -13,15 +16,30 @@ export default function Home() {
   const [receivedText, setReceivedText] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [goals, setGoals] = useState([]);
+  useEffect(() => {
+    onSnapshot(collection(database, 'goals'), (querySnapshot) => {
+      let newArray = []
+      // querySnapshot contains bunch of documents
+      if (!querySnapshot.empty) {
+        querySnapshot.forEach((doc) => {
+          console.log(doc.id);
+          newArray.push({...doc.data(), id: doc.id});
+        });
+      }
+      setGoals(newArray);
+    });
+  }, []);
+
 
   // Callback function to handle the received data
   function handleInputData(data) {
     console.log('Callback function called with:', data);
     const newGoal = {
       text: data,
-      id: Math.random(),
     };
     setGoals((currentGoals) => [...currentGoals, newGoal]);
+    // call write to DB function
+    writeToDB(newGoal, 'goals');
     setReceivedText(data);
     setModalVisible(false);
   }
