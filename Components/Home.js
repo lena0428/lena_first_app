@@ -9,6 +9,7 @@ import { database } from '../Firebase/firebaseSetup';
 import { writeToDB } from '../Firebase/firestoreHelper';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { useEffect } from 'react';
+import { deleteFromDB } from '../Firebase/firestoreHelper';
 
 export default function Home() {
   console.log(database)
@@ -46,7 +47,9 @@ export default function Home() {
 
   // Callback function to handle the deletion of a goal
   const handleDeleteGoal = (goalId) => {
-    setGoals((currentGoals) => currentGoals.filter((goal) => goal.id !== goalId));
+    // setGoals((currentGoals) => currentGoals.filter((goal) => goal.id !== goalId));
+    // call detele from DB function
+    deleteFromDB(goalId, 'goals');
   };
 
   const handleConfirm = () => {
@@ -81,6 +84,7 @@ export default function Home() {
           <Text style={styles.textStyle}>Please Add a Goal</Text>
         ) : (
           <FlatList renderItem={({ item }) => {
+            console.log(item)
             return (
               <GoalItem goal={item} onDelete={handleDeleteGoal} />
             )
