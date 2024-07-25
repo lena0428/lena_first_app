@@ -2,9 +2,9 @@ import { collection, addDoc } from "firebase/firestore";
 import { database } from "./firebaseSetup";
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 
-export async function writeToDB(data, collectionName) {
+export async function writeToDB(date, col, docId, subCol) {
     try {
-        await addDoc(collection(database, collectionName), data);
+        await addDoc(collection(database, col), date);
     } catch (e) {
         console.error('Error writing document:', e);
     }

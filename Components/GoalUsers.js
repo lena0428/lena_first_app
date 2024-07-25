@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, FlatList } from "react-native";
 
-const GoalUsers = () => {
+const GoalUsers = ({ id }) => {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
@@ -14,6 +14,9 @@ const GoalUsers = () => {
                 const data = await response.json();
                 console.log(data);
                 setUsers(data);
+                data.forEach((user) => {
+                    writeToDB(user, `goals/${id}/users`);
+                });
             } catch (err) {
                 console.log(err);
             }
