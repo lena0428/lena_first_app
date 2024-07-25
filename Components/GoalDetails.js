@@ -1,6 +1,7 @@
 import React, { useLayoutEffect, useState } from 'react';
 import { View, Text, Button } from 'react-native';
 import { markAsWarning } from '../Firebase/firestoreHelper';
+import GoalUsers from './GoalUsers';
 
 export default function GoalDetails({ navigation, route }) {
     const [textColor, setTextColor] = useState('black');
@@ -33,6 +34,7 @@ export default function GoalDetails({ navigation, route }) {
                 <Text style={{ color: textColor }}>More Details</Text>
             )}
             <Button title="More details" onPress={() => navigation.push('Details')} />
+            <GoalUsers />
         </View>
     );
 }
