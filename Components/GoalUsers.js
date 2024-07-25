@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, FlatList } from "react-native";
+import { writeToDB, readAllData } from "../Firebase/firebaseHelper";
 
 const GoalUsers = ({ id }) => {
     const [users, setUsers] = useState([]);
@@ -7,6 +8,13 @@ const GoalUsers = ({ id }) => {
     useEffect(() => {
         async function fetchUserData() {
             try {
+               // Check if the data is already in the database
+                const dataFromFirebase = await readAllData(`goals/${id}/users`);
+                if (dataFromFirebase.length) {
+                    setUsers(dataFromFirebase);
+                    return;
+                }
+
                 const response = await fetch('https://jsonplaceholder.typicode.com/users');
                 if (!response.ok) {
                     throw new Error('The request was not successful');

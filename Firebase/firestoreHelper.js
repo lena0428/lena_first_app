@@ -1,6 +1,6 @@
 import { collection, addDoc } from "firebase/firestore";
 import { database } from "./firebaseSetup";
-import { deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { deleteDoc, doc, updateDoc, getDocs } from "firebase/firestore";
 
 export async function writeToDB(date, col, docId, subCol) {
     try {
@@ -26,5 +26,19 @@ export async function markAsWarning(goalId) {
         await updateDoc(doc(database, 'goals', goalId), { warning: true });
     } catch (e) {
         console.error('Error updating document:', e);
+    }
+}
+
+export async function readAllData(collectionName) {
+    try {
+        const querySnapshot = await getDocs(collection(database, collectionName));
+        const dataArray = [];
+        querySnapshot.forEach((doc) => {
+            dataArray.push({ ...doc.data(), id: doc.id });
+        });
+        console.log("array from the database", dataArray);
+        return dataArray;
+    } catch (err) {
+        console.log(err);
     }
 }
