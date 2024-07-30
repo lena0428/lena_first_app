@@ -5,15 +5,21 @@ import Home from './Components/Home';
 import GoalDetails from './Components/GoalDetails';
 import Login from './Components/Login';
 import Signup from './Components/Signup';
+import Profile from './Components/Profile';
 import { auth } from './Firebase/firebaseSetup';
 import { onAuthStateChanged } from 'firebase/auth';
+import { Ionicons } from '@expo/vector-icons';
 
 const Stack = createNativeStackNavigator();
 
 const AuthStack = () => (
   <Stack.Navigator initialRouteName="Signup">
-    <Stack.Screen name="Signup" component={Signup} />
-    <Stack.Screen name="Login" component={Login} />
+    <Stack.Screen name="Signup" component={Signup} options={() => ({
+      headerStyle: { backgroundColor: 'darkmagenta' },
+    })} />
+    <Stack.Screen name="Login" component={Login} options={() => ({
+      headerStyle: { backgroundColor: 'darkmagenta' },
+    })} />
   </Stack.Navigator>
 );
 
@@ -22,10 +28,19 @@ const AppStack = () => (
     <Stack.Screen
       name="Home"
       component={Home}
-      options={{
-        title: 'Home Page',
+      options={({ navigation }) => ({
+        title: 'All My Goals',
         headerStyle: { backgroundColor: 'darkmagenta' },
-      }}
+        headerRight: () => (
+          <Ionicons
+            name="person-circle-outline"
+            size={30}
+            color="white"
+            style={{ marginRight: 15 }}
+            onPress={() => navigation.navigate('Profile')}
+          />
+        ),
+      })}
     />
     <Stack.Screen
       name="Details"
@@ -34,6 +49,14 @@ const AppStack = () => (
         headerStyle: { backgroundColor: 'darkmagenta' },
         title: route.params?.goalObject.text,
       })}
+    />
+    <Stack.Screen
+      name="Profile"
+      component={Profile}
+      options={{
+        title: 'Profile',
+        headerStyle: { backgroundColor: 'darkmagenta' },
+      }}
     />
   </Stack.Navigator>
 );
@@ -44,11 +67,7 @@ export default function App() {
   useEffect(() => {
     const checkAuthState = () => {
       onAuthStateChanged(auth, (user) => {
-        if (user) {
-          setIsLoggedIn(true);
-        } else {
-          setIsLoggedIn(false);
-        }
+        setIsLoggedIn(!!user);
       });
     };
 
