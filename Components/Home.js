@@ -6,9 +6,10 @@ import { useState, useEffect } from 'react';
 import GoalItem from './GoalItem';
 import PressableButton from './PressableButton';
 import { getAuth } from "firebase/auth";
-import { database } from '../Firebase/firebaseSetup';
+import { database, storage } from '../Firebase/firebaseSetup';
 import { writeToDB, deleteFromDB } from '../Firebase/firestoreHelper';
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
+import { ref, uploadBytesResumable } from "firebase/storage";
 
 export default function Home() {
   const appName = "lena_first_app";
@@ -50,9 +51,23 @@ export default function Home() {
     }
   }, []);
 
-  function handleInputData(data) {
+  async function handleInputData(data) {
     console.log('Callback function called with:', data);
-    const newGoal = { text: data.text, imageUri: data.imageUri };
+    let newGoal = { text: data.text };
+
+    if (data.imageUri) {
+      try {
+        const response = await fetch(data.imageUri);
+        const blob = await response.blob();
+        const imageName = data.imageUri.substring(data.imageUri.lastIndexOf('/') + 1);
+        const imageRef = ref(storage, `images/${imageName}`);
+        const uploadResult = await uploadBytesResumable(imageRef, blob);
+        newGoal.imageUri = uploadResult.metadata.fullPath;
+      } catch (error) {
+        console.error("Error uploading image: ", error);
+      }
+    }
+
     setGoals((currentGoals) => [...currentGoals, newGoal]);
     writeToDB(newGoal, 'goals');
     setReceivedText(data.text);

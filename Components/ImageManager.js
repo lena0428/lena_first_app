@@ -31,7 +31,7 @@ const ImageManager = ({ onImageTaken }) => {
         const { assets } = result;
         const uri = assets[0].uri;
         setImageUri(uri);
-        onImageTaken(uri); // Pass the image URI to the parent component
+        onImageTaken(uri); 
       } else {
         Alert.alert('Cancelled', 'Image picking was cancelled');
       }
