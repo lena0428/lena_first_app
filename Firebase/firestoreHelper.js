@@ -1,20 +1,27 @@
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, deleteDoc, doc } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 import { database } from "./firebaseSetup";
-import { deleteDoc, doc } from "firebase/firestore";
 
 export async function writeToDB(data, collectionName) {
-    try {
-        await addDoc(collection(database, collectionName), data);
-    } catch (e) {
-        console.error('Error writing document:', e);
+    const auth = getAuth();
+    const currentUser = auth.currentUser;
+
+    if (currentUser) {
+        const dataWithOwner = { ...data, owner: currentUser.uid };
+        try {
+            await addDoc(collection(database, collectionName), dataWithOwner);
+        } catch (e) {
+            console.error('Error writing document:', e);
+        }
+    } else {
+        console.error("No user is signed in");
     }
 }
 
 export async function deleteFromDB(key, collectionName) {
     try { 
-      await deleteDoc(doc(database, collectionName, key));
+        await deleteDoc(doc(database, collectionName, key));
+    } catch (err) {
+        console.log(err);
     }
-    catch (err) {
-      console.log(err)
-    }
-  }
+}

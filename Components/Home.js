@@ -1,54 +1,65 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, Text, Button, SafeAreaView, ScrollView, FlatList } from 'react-native';
+import { StyleSheet, View, Text, Button, SafeAreaView, FlatList } from 'react-native';
 import Header from './Header';
 import Input from './Input';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import GoalItem from './GoalItem';
 import PressableButton from './PressableButton';
+import { getAuth } from "firebase/auth";
 import { database } from '../Firebase/firebaseSetup';
-import { writeToDB } from '../Firebase/firestoreHelper';
-import { collection, onSnapshot } from 'firebase/firestore';
-import { useEffect } from 'react';
-import { deleteFromDB } from '../Firebase/firestoreHelper';
+import { writeToDB, deleteFromDB } from '../Firebase/firestoreHelper';
+import { collection, query, where, onSnapshot } from 'firebase/firestore';
 
 export default function Home() {
-  console.log(database)
   const appName = "lena_first_app";
   const [receivedText, setReceivedText] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [goals, setGoals] = useState([]);
+
   useEffect(() => {
-    onSnapshot(collection(database, 'goals'), (querySnapshot) => {
-      let newArray = []
-      // querySnapshot contains bunch of documents
-      if (!querySnapshot.empty) {
-        querySnapshot.forEach((doc) => {
-          console.log(doc.id);
-          newArray.push({...doc.data(), id: doc.id});
-        });
-      }
-      setGoals(newArray);
-    });
+    const auth = getAuth();
+    const currentUser = auth.currentUser;
+
+    if (currentUser) {
+      const goalsQuery = query(
+        collection(database, "goals"),
+        where("owner", "==", currentUser.uid)
+      );
+
+      const unsubscribe = onSnapshot(
+        goalsQuery,
+        (querySnapshot) => {
+          let newArray = [];
+          if (!querySnapshot.empty) {
+            querySnapshot.forEach((doc) => {
+              console.log(doc.id);
+              newArray.push({ ...doc.data(), id: doc.id });
+            });
+          }
+          setGoals(newArray);
+        },
+        (error) => {
+          console.error("Error fetching goals: ", error);
+          if (error.code === "permission-denied") {
+            console.error("Permission denied. Please check your security rules.");
+          }
+        }
+      );
+
+      return () => unsubscribe();
+    }
   }, []);
 
-
-  // Callback function to handle the received data
   function handleInputData(data) {
     console.log('Callback function called with:', data);
-    const newGoal = {
-      text: data,
-    };
+    const newGoal = { text: data };
     setGoals((currentGoals) => [...currentGoals, newGoal]);
-    // call write to DB function
     writeToDB(newGoal, 'goals');
     setReceivedText(data);
     setModalVisible(false);
   }
 
-  // Callback function to handle the deletion of a goal
   const handleDeleteGoal = (goalId) => {
-    // setGoals((currentGoals) => currentGoals.filter((goal) => goal.id !== goalId));
-    // call detele from DB function
     deleteFromDB(goalId, 'goals');
   };
 
