@@ -21,6 +21,7 @@ export default function Home() {
     const auth = getAuth();
     const currentUser = auth.currentUser;
 
+
     if (currentUser) {
       const goalsQuery = query(
         collection(database, "goals"),
