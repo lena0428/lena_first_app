@@ -1,19 +1,25 @@
 import { StyleSheet, TextInput, Text, Button, View, Modal, Image } from 'react-native';
 import React, { useState } from 'react';
+import ImageManager from './ImageManager';
 
 const Input = (props) => {
     const [isBlurred, setIsBlurred] = useState(false);
     const [text, setText] = useState('');
+    const [imageUri, setImageUri] = useState(null);
 
     const handleConfirm = () => {
         setText('');
         props.onConfirm();
-        props.inputHandler(text);
+        props.inputHandler({ text, imageUri });
     };
 
     const handleCancel = () => {
         setText('');
         props.onCancel();
+    };
+
+    const handleImageTaken = (uri) => {
+        setImageUri(uri);
     };
 
     return (
@@ -44,6 +50,7 @@ const Input = (props) => {
                         value={text}
                     />
                     {isBlurred && <Text>Thank you</Text>}
+                    <ImageManager onImageTaken={handleImageTaken} />
                     <View style={styles.buttonContainer}>
                         <Button title='Cancel' onPress={handleCancel} color="#007AFF" />
                         <Button title='Confirm' onPress={handleConfirm} color="#007AFF" disabled={!text} />
@@ -84,6 +91,7 @@ const styles = StyleSheet.create({
     image: {
         width: 100,
         height: 100,
+        marginBottom: 20,
     },
 });
 

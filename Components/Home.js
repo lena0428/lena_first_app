@@ -52,10 +52,10 @@ export default function Home() {
 
   function handleInputData(data) {
     console.log('Callback function called with:', data);
-    const newGoal = { text: data };
+    const newGoal = { text: data.text, imageUri: data.imageUri };
     setGoals((currentGoals) => [...currentGoals, newGoal]);
     writeToDB(newGoal, 'goals');
-    setReceivedText(data);
+    setReceivedText(data.text);
     setModalVisible(false);
   }
 
