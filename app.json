@@ -1,5 +1,13 @@
 {
   "expo": {
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "The app needs access to your camera."
+        }
+      ]
+    ],
     "name": "lena_first_app",
     "slug": "lena_first_app",
     "version": "1.0.0",

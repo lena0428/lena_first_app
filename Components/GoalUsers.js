@@ -8,7 +8,6 @@ const GoalUsers = ({ id }) => {
     useEffect(() => {
         async function fetchUserData() {
             try {
-               // Check if the data is already in the database
                 const dataFromFirebase = await readAllData(`goals/${id}/users`);
                 if (dataFromFirebase.length) {
                     setUsers(dataFromFirebase);
