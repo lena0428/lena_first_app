@@ -57,10 +57,19 @@ export default function Home() {
     let newGoal = { text: data.text };
 
     if (data.imageUri) {
+      await handleImageUpload(data.imageUri);
+    }
+
+    setGoals((currentGoals) => [...currentGoals, newGoal]);
+    writeToDB(newGoal, 'goals');
+    setReceivedText(data.text);
+    setModalVisible(false);
+
+    async function handleImageUpload(imageUri) {
       try {
-        const response = await fetch(data.imageUri);
+        const response = await fetch(imageUri);
         const blob = await response.blob();
-        const imageName = data.imageUri.substring(data.imageUri.lastIndexOf('/') + 1);
+        const imageName = data.imageUri.substring(imageUri.lastIndexOf('/') + 1);
         const imageRef = ref(storage, `images/${imageName}`);
         const uploadResult = await uploadBytesResumable(imageRef, blob);
         newGoal.imageUri = uploadResult.metadata.fullPath;
@@ -68,11 +77,6 @@ export default function Home() {
         console.error("Error uploading image: ", error);
       }
     }
-
-    setGoals((currentGoals) => [...currentGoals, newGoal]);
-    writeToDB(newGoal, 'goals');
-    setReceivedText(data.text);
-    setModalVisible(false);
   }
 
   const handleDeleteGoal = (goalId) => {
