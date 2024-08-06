@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { auth } from '../Firebase/firebaseSetup';
 import { signOut } from 'firebase/auth';
 import { Ionicons } from '@expo/vector-icons';
+import LocationManager from './LocationManager';
 
 const Profile = ({ navigation }) => {
   const user = auth.currentUser;
@@ -34,6 +35,7 @@ const Profile = ({ navigation }) => {
     <View style={styles.container}>
       <Text style={styles.text}>Email: {user?.email}</Text>
       <Text style={styles.text}>UID: {user?.uid}</Text>
+      <LocationManager/>
     </View>
   );
 };
