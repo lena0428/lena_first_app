@@ -2,14 +2,25 @@ import React, { useState } from 'react';
 import { View, Button, Alert, Image, StyleSheet } from 'react-native';
 import * as Location from 'expo-location';
 import { googleMapApiKey } from '@env';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute} from '@react-navigation/native';
+import { useEffect } from 'react';
 
 
 const LocationManager = () => {
     const [location, setLocation] = useState(null);
     const [status, requestPermission] = Location.useForegroundPermissions();
     const navigation = useNavigation();
+    const route = useRoute();
+    console.log(route.params);
 
+    useEffect(() => {
+        if (route.params?.location) {
+            setLocation(route.params.location);
+        }
+    }, [route.params?.location]);
+
+
+    
     async function verifyLocationPermission() {
         if (status && status.granted) {
             return true;
@@ -47,7 +58,7 @@ const LocationManager = () => {
             />
             <Button title="Find My Location" onPress={locateUserHandler} />
             <Button
-                title="Go to Map"
+                title="Let me choose a locationp"
                 onPress={() => navigation.navigate('Map')}
             />
         </View>
