@@ -1,57 +1,39 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { auth } from '../Firebase/firebaseSetup';
-import { signOut } from 'firebase/auth';
-import { Ionicons } from '@expo/vector-icons';
-import LocationManager from './LocationManager';
+import React, { useState } from "react";
+import { Text, View, StyleSheet, Button, Image } from "react-native";
+import * as Location from "expo-location";
+import { auth } from "../Firebase/firebaseSetup";
+import LocationManager from "./LocationManager";
 
-const Profile = ({ navigation }) => {
-  const user = auth.currentUser;
+export default function Profile({ route }) {
+    const selectedLocation = route.params?.location;
 
-  const handleSignOut = async () => {
-    try {
-      await signOut(auth);
-      navigation.replace('Login'); 
-    } catch (error) {
-      console.error('Error signing out: ', error);
-    }
-  };
-
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <Ionicons
-          name="log-out-outline"
-          size={30}
-          color="white"
-          style={{ marginRight: 15 }}
-          onPress={handleSignOut}
-        />
-      ),
-    });
-  }, [navigation]);
-
-  return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Email: {user?.email}</Text>
-      <Text style={styles.text}>UID: {user?.uid}</Text>
-      <LocationManager/>
-    </View>
-  );
-};
+    return (
+        <View style={styles.container}>
+            <Text>Profile</Text>
+            <View>
+                {auth.currentUser ? (
+                    <View>
+                        <Text>{auth.currentUser.email}</Text>
+                        <Text>{auth.currentUser.uid}</Text>
+                        <LocationManager />
+                    </View>
+                ) : (
+                    <Text>No user is currently logged in.</Text>
+                )}
+            </View>
+        </View>
+    );
+}
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
-    backgroundColor: '#fff',
-  },
-  text: {
-    fontSize: 18,
-    marginBottom: 10,
-  },
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    map: {
+        width: 400,
+        height: 200,
+        marginTop: 20,
+    },
 });
-
-export default Profile;
