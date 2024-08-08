@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import { View, Button, Alert, Image, StyleSheet } from 'react-native';
 import * as Location from 'expo-location';
 import { googleMapApiKey } from '@env';
+import { useNavigation } from '@react-navigation/native';
+
 
 const LocationManager = () => {
     const [location, setLocation] = useState(null);
     const [status, requestPermission] = Location.useForegroundPermissions();
+    const navigation = useNavigation();
 
     async function verifyLocationPermission() {
         if (status && status.granted) {
@@ -43,6 +46,10 @@ const LocationManager = () => {
                 }}
             />
             <Button title="Find My Location" onPress={locateUserHandler} />
+            <Button
+                title="Go to Map"
+                onPress={() => navigation.navigate('Map')}
+            />
         </View>
     );
 };
