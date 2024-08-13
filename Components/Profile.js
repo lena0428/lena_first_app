@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { Text, View, StyleSheet, Button, Image } from "react-native";
-import * as Location from "expo-location";
+import React from "react";
+import { Text, View, StyleSheet } from "react-native";
 import { auth } from "../Firebase/firebaseSetup";
 import LocationManager from "./LocationManager";
+import NotificationManager from "./NotificationManager";
 
 export default function Profile() {
     return (
@@ -14,6 +14,7 @@ export default function Profile() {
                         <Text>{auth.currentUser.email}</Text>
                         <Text>{auth.currentUser.uid}</Text>
                         <LocationManager />
+                        <NotificationManager />
                     </View>
                 ) : (
                     <Text>No user is currently logged in.</Text>

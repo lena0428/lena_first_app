@@ -10,9 +10,25 @@ import { auth } from './Firebase/firebaseSetup';
 import { onAuthStateChanged } from 'firebase/auth';
 import { Ionicons } from '@expo/vector-icons';
 import Map from './Components/Map';
-
+import * as Notifications from 'expo-notifications';
 
 const Stack = createNativeStackNavigator();
+
+Notifications.setNotificationHandler({
+    handleNotification: async () => {
+        return {
+            shouldShowAlert: true,
+            shouldPlaySound: true,
+            shouldSetBadge: false,
+        };
+    },
+    handleSuccess: (notificationId) => {
+        console.log(`Notification ${notificationId} handled successfully.`);
+    },
+    handleError: (notificationId, error) => {
+        console.error(`Error handling notification ${notificationId}:`, error);
+    },
+});
 
 const AuthStack = () => (
   <Stack.Navigator initialRouteName="Signup">
