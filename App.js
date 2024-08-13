@@ -15,7 +15,6 @@ import { Linking } from 'react-native';
 
 const Stack = createNativeStackNavigator();
 
-// Set the notification handler to present notifications
 Notifications.setNotificationHandler({
   handleNotification: async () => {
     return {
