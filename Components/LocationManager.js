@@ -2,11 +2,40 @@ import React, { useState } from 'react';
 import { View, Button, Alert, Image, StyleSheet } from 'react-native';
 import * as Location from 'expo-location';
 import { googleMapApiKey } from '@env';
+import { useNavigation, useRoute} from '@react-navigation/native';
+import { useEffect } from 'react';
+import { writeWithIdToDB, getADoc } from '../Firebase/firestoreHelper';
+import { auth } from '../Firebase/firebaseSetup';
+
 
 const LocationManager = () => {
     const [location, setLocation] = useState(null);
     const [status, requestPermission] = Location.useForegroundPermissions();
+    const navigation = useNavigation();
+    const route = useRoute();
+    console.log(route.params);
 
+    useEffect(() => {
+        if (route.params?.location) {
+            setLocation(route.params.location);
+        }
+    }, [route.params?.location]);
+
+    useEffect(() => {
+        async function fetchUserLocation() {
+            const userDoc = await getADoc('users', auth.currentUser.uid);
+            if (userDoc) {
+                setLocation(userDoc.location);
+            }
+        }
+        
+        if (!route.params?.location) {
+            fetchUserLocation();
+        }
+    }, []);
+
+
+    
     async function verifyLocationPermission() {
         if (status && status.granted) {
             return true;
@@ -34,6 +63,13 @@ const LocationManager = () => {
         }
     }
 
+    const saveLocationHandler = async () => {
+        if (location) {
+            await writeWithIdToDB(auth.currentUser.uid, 'users', { location });
+            navigation.navigate('Home');
+        }
+    };
+
     return (
         <View>
             <Image
@@ -43,6 +79,15 @@ const LocationManager = () => {
                 }}
             />
             <Button title="Find My Location" onPress={locateUserHandler} />
+            <Button
+                title="Let me choose a location"
+                onPress={() => navigation.navigate('Map')}
+            />
+             <Button
+                title="Save my location"
+                onPress={saveLocationHandler}
+                disabled={!location}
+            />
         </View>
     );
 };
