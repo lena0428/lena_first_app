@@ -7,28 +7,69 @@ import Login from './Components/Login';
 import Signup from './Components/Signup';
 import Profile from './Components/Profile';
 import { auth } from './Firebase/firebaseSetup';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { Ionicons } from '@expo/vector-icons';
 import Map from './Components/Map';
 import * as Notifications from 'expo-notifications';
+import { Linking } from 'react-native';
 
 const Stack = createNativeStackNavigator();
 
+// Set the notification handler to present notifications
 Notifications.setNotificationHandler({
-    handleNotification: async () => {
-        return {
-            shouldShowAlert: true,
-            shouldPlaySound: true,
-            shouldSetBadge: false,
-        };
-    },
-    handleSuccess: (notificationId) => {
-        console.log(`Notification ${notificationId} handled successfully.`);
-    },
-    handleError: (notificationId, error) => {
-        console.error(`Error handling notification ${notificationId}:`, error);
-    },
+  handleNotification: async () => {
+    return {
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: false,
+    };
+  },
+  handleSuccess: (notificationId) => {
+    console.log(`Notification ${notificationId} handled successfully.`);
+  },
+  handleError: (notificationId, error) => {
+    console.error(`Error handling notification ${notificationId}:`, error);
+  },
 });
+
+export default function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const checkAuthState = () => {
+      onAuthStateChanged(auth, (user) => {
+        setIsLoggedIn(!!user);
+      });
+    };
+
+    checkAuthState();
+
+    const subscription = Notifications.addNotificationReceivedListener(notification => {
+      console.log('Notification received:', notification);
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+  useEffect(() => {
+    const subscription = Notifications.addNotificationResponseReceivedListener(response => {
+      console.log('Notification response:', response);
+      Linking.openURL(response.notification.request.content.data.url);
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  } , []);
+
+  return (
+    <NavigationContainer>
+      {isLoggedIn ? <AppStack /> : <AuthStack />}
+    </NavigationContainer>
+  );
+}
 
 const AuthStack = () => (
   <Stack.Navigator initialRouteName="Signup">
@@ -71,10 +112,27 @@ const AppStack = () => (
     <Stack.Screen
       name="Profile"
       component={Profile}
-      options={{
+      options={({ navigation }) => ({
         title: 'Profile',
         headerStyle: { backgroundColor: 'darkmagenta' },
-      }}
+        headerRight: () => (
+          <Ionicons
+            name="log-out"
+            size={30}
+            color="white"
+            style={{ marginRight: 15 }}
+            onPress={async () => {
+              try {
+                await signOut(auth);
+                navigation.replace('Login');
+              } catch (error) {
+                console.error('Error signing out: ', error);
+              }
+            }}
+          />
+        )
+      })
+      }
     />
     <Stack.Screen
       name="Map"
@@ -85,23 +143,3 @@ const AppStack = () => (
     />
   </Stack.Navigator>
 );
-
-export default function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    const checkAuthState = () => {
-      onAuthStateChanged(auth, (user) => {
-        setIsLoggedIn(!!user);
-      });
-    };
-
-    checkAuthState();
-  }, []);
-
-  return (
-    <NavigationContainer>
-      {isLoggedIn ? <AppStack /> : <AuthStack />}
-    </NavigationContainer>
-  );
-}
