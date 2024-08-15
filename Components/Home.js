@@ -10,6 +10,10 @@ import { database, storage } from '../Firebase/firebaseSetup';
 import { writeToDB, deleteFromDB } from '../Firebase/firestoreHelper';
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { ref, uploadBytesResumable } from "firebase/storage";
+import { Platform } from 'react-native';
+import * as Notifications from "expo-notifications";
+import Constants from "expo-constants";
+import { verifyPermission } from './NotificationManager';
 
 export default function Home() {
   const appName = "lena_first_app";
@@ -21,6 +25,26 @@ export default function Home() {
     const auth = getAuth();
     const currentUser = auth.currentUser;
 
+    const getPushToken = async () => {
+      const hasPermission = await verifyPermission();
+      if (!hasPermission) {
+        console.log('Notification permissions not granted.');
+        return;
+      }
+
+      if (Platform.OS === "android") {
+        await Notifications.setNotificationChannelAsync("default", {
+          name: "default",
+          importance: Notifications.AndroidImportance.MAX,
+        });
+      }
+
+      const { data: pushToken } = await Notifications.getExpoPushTokenAsync({
+        projectId: Constants.expoConfig.extra.eas.projectId,
+      });
+
+      console.log("Expo Push Token:", pushToken);
+    };
 
     if (currentUser) {
       const goalsQuery = query(
@@ -48,6 +72,7 @@ export default function Home() {
         }
       );
 
+      getPushToken();
       return () => unsubscribe();
     }
   }, []);
