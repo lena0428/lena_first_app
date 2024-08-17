@@ -1,8 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, Text, Button, SafeAreaView, FlatList } from 'react-native';
+import { StyleSheet, View, Text, Button, SafeAreaView, FlatList, Platform } from 'react-native';
+import { useState, useEffect } from 'react';
+import * as Notifications from 'expo-notifications';
+import Constants from 'expo-constants';
 import Header from './Header';
 import Input from './Input';
-import { useState, useEffect } from 'react';
 import GoalItem from './GoalItem';
 import PressableButton from './PressableButton';
 import { getAuth } from "firebase/auth";
@@ -10,9 +12,6 @@ import { database, storage } from '../Firebase/firebaseSetup';
 import { writeToDB, deleteFromDB } from '../Firebase/firestoreHelper';
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { ref, uploadBytesResumable } from "firebase/storage";
-import { Platform } from 'react-native';
-import * as Notifications from "expo-notifications";
-import Constants from "expo-constants";
 import { verifyPermission } from './NotificationManager';
 
 export default function Home() {
@@ -20,31 +19,13 @@ export default function Home() {
   const [receivedText, setReceivedText] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [goals, setGoals] = useState([]);
+  const [expoPushToken, setExpoPushToken] = useState('');
 
   useEffect(() => {
+    console.log('useEffect is running');
+
     const auth = getAuth();
     const currentUser = auth.currentUser;
-
-    const getPushToken = async () => {
-      const hasPermission = await verifyPermission();
-      if (!hasPermission) {
-        console.log('Notification permissions not granted.');
-        return;
-      }
-
-      if (Platform.OS === "android") {
-        await Notifications.setNotificationChannelAsync("default", {
-          name: "default",
-          importance: Notifications.AndroidImportance.MAX,
-        });
-      }
-
-      const { data: pushToken } = await Notifications.getExpoPushTokenAsync({
-        projectId: Constants.expoConfig.extra.eas.projectId,
-      });
-
-      console.log("Expo Push Token:", pushToken);
-    };
 
     if (currentUser) {
       const goalsQuery = query(
@@ -72,10 +53,71 @@ export default function Home() {
         }
       );
 
-      getPushToken();
-      return () => unsubscribe();
     }
+    
+    const getPushToken = async () => {
+      console.log('getPushToken function called');
+
+      const hasPermission = await verifyPermission();
+      console.log('Permission status:', hasPermission);
+
+      if (!hasPermission) {
+        console.log('Permission denied');
+        return; 
+      }
+
+      if (Platform.OS === "android") {
+        console.log('Setting notification channel for Android');
+        await Notifications.setNotificationChannelAsync("default", {
+          name: "default",
+          importance: Notifications.AndroidImportance.MAX,
+        });
+      }
+
+      console.log('Notification permissions granted');
+
+      const pushToken = await Notifications.getExpoPushTokenAsync({
+        projectId: Constants.expoConfig.extra.eas.projectId,
+      });
+
+      console.log('Expo Push Token:', pushToken.data);
+      setExpoPushToken(pushToken.data); 
+    }
+
+    getPushToken();
+
+    return () => {
+      unsubscribe();
+    }
+
   }, []);
+
+  const sendPushNotification = async () => {
+    console.log('Sending push notification');
+    if (!expoPushToken) {
+      console.log('Push token not available');
+      return;
+    }
+
+    try {
+      const response = await fetch("https://exp.host/--/api/v2/push/send", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          to: expoPushToken,
+          title: "Push Notification",
+          body: "This is a push notification",
+        }),
+      });
+
+      const data = await response.json();
+      console.log('Push notification response:', data);
+    } catch (error) {
+      console.error("Error sending push notification:", error);
+    }
+  };
 
   async function handleInputData(data) {
     console.log('Callback function called with:', data);
@@ -148,6 +190,7 @@ export default function Home() {
           </FlatList>
         )}
       </View>
+      <Button title="Send Push Notification" onPress={sendPushNotification} />
       <StatusBar style="auto" />
     </SafeAreaView>
   );
